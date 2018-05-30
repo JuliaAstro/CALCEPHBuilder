@@ -28,7 +28,7 @@ sources = [
 
 script = raw"""
 cd $WORKSPACE/srcdir
-cd calceph-3.0.0/
+cd calceph-3.1.0/
 if [[ ${target} == i686-w64* ]] || [[ ${target} == x86_64-w64* ]]; then
     echo 'LT_INIT([win32-dll])' >> configure.ac
     sed -i '/^libcalceph_la_LDFLAGS/ s/$/ -no-undefined/' src/Makefile.am
@@ -41,7 +41,7 @@ make install
 """
 
 products = prefix -> [
-    LibraryProduct(prefix,"libcalceph")
+    LibraryProduct(prefix,"libcalceph",:libcalceph)
 ]
 
 

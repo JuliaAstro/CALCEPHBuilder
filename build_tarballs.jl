@@ -22,8 +22,8 @@ info("Building for $(join(triplet.(platforms), ", "))")
 
 # Collection of sources required to build libcalceph
 sources = [
-    "https://www.imcce.fr/content/medias/recherche/equipes/asd/calceph/calceph-3.0.0.tar.gz" =>
-    "4f8192ff19fc686e89cafb233d71868d9074c85d2bdfab3e76bb905fcdcc1705",
+    "https://www.imcce.fr/content/medias/recherche/equipes/asd/calceph/calceph-3.1.0.tar.gz" =>
+    "aaf43641205af6b2d7633eead72d6948e43b77424a56bc1493462d601509be85",
 ]
 
 script = raw"""

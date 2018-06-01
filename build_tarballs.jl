@@ -22,13 +22,13 @@ info("Building for $(join(triplet.(platforms), ", "))")
 
 # Collection of sources required to build libcalceph
 sources = [
-    "https://www.imcce.fr/content/medias/recherche/equipes/asd/calceph/calceph-3.0.0.tar.gz" =>
-    "4f8192ff19fc686e89cafb233d71868d9074c85d2bdfab3e76bb905fcdcc1705",
+    "https://www.imcce.fr/content/medias/recherche/equipes/asd/calceph/calceph-3.1.0.tar.gz" =>
+    "aaf43641205af6b2d7633eead72d6948e43b77424a56bc1493462d601509be85",
 ]
 
 script = raw"""
 cd $WORKSPACE/srcdir
-cd calceph-3.0.0/
+cd calceph-3.1.0/
 if [[ ${target} == i686-w64* ]] || [[ ${target} == x86_64-w64* ]]; then
     echo 'LT_INIT([win32-dll])' >> configure.ac
     sed -i '/^libcalceph_la_LDFLAGS/ s/$/ -no-undefined/' src/Makefile.am
@@ -41,7 +41,7 @@ make install
 """
 
 products = prefix -> [
-    LibraryProduct(prefix,"libcalceph")
+    LibraryProduct(prefix,"libcalceph",:libcalceph)
 ]
 
 

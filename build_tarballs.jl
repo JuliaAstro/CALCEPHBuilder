@@ -15,7 +15,7 @@ if [[ ${target} == i686-w64* ]] || [[ ${target} == x86_64-w64* ]]; then
     sed -i '/^libcalceph_la_LDFLAGS/ s/$/ -no-undefined/' src/Makefile.am
 fi
 autoreconf -fi
-./configure --prefix=/ --host=$target --enable-fortran=no --enable-python=no --disable-static
+./configure --prefix=$prefix --host=$target --enable-fortran=no --enable-python=no --disable-static
 make -j${nproc}
 make install
 """

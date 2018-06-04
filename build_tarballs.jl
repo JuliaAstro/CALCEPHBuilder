@@ -1,31 +1,12 @@
 using BinaryBuilder
 
-# These are the platforms built inside the wizard
-platforms = [
-    BinaryProvider.Linux(:i686, :glibc),
-    BinaryProvider.Linux(:x86_64, :glibc),
-    BinaryProvider.Linux(:aarch64, :glibc),
-    BinaryProvider.Linux(:armv7l, :glibc),
-    BinaryProvider.Linux(:powerpc64le, :glibc),
-    BinaryProvider.MacOS(),
-    BinaryProvider.Windows(:i686),
-    BinaryProvider.Windows(:x86_64)
-]
-
-
-# If the user passed in a platform (or a few, comma-separated) on the
-# command-line, use that instead of our default platforms
-if length(ARGS) > 0
-    platforms = platform_key.(split(ARGS[1], ","))
-end
-info("Building for $(join(triplet.(platforms), ", "))")
-
 # Collection of sources required to build libcalceph
 sources = [
     "https://www.imcce.fr/content/medias/recherche/equipes/asd/calceph/calceph-3.1.0.tar.gz" =>
     "aaf43641205af6b2d7633eead72d6948e43b77424a56bc1493462d601509be85",
 ]
 
+# Bash recipe for building across all platforms
 script = raw"""
 cd $WORKSPACE/srcdir
 cd calceph-3.1.0/
@@ -35,20 +16,39 @@ if [[ ${target} == i686-w64* ]] || [[ ${target} == x86_64-w64* ]]; then
 fi
 autoreconf -fi
 ./configure --prefix=/ --host=$target --enable-fortran=no --enable-python=no --disable-static
-make
+make -j${nproc}
 make install
-
 """
 
-products = prefix -> [
-    LibraryProduct(prefix,"libcalceph",:libcalceph)
+# These are the platforms we will build for by default, unless further
+# platforms are passed in on the command line
+platforms = [
+    # Windows
+    Windows(:i686),
+    Windows(:x86_64),
+
+    # Hello linux my old friend
+    Linux(:i686, :glibc),
+    Linux(:x86_64, :glibc),
+    Linux(:aarch64, :glibc),
+    Linux(:armv7l, :glibc),
+    Linux(:powerpc64le, :glibc),
+
+    # Add some musl love
+    Linux(:i686, :musl),
+    Linux(:x86_64, :musl),
+
+    # The BSD's
+    FreeBSD(:x86_64),
+    MacOS()
 ]
 
+products = prefix -> [
+    LibraryProduct(prefix, "libcalceph", :libcalceph)
+]
 
-# Build the given platforms using the given sources
-hashes = autobuild(pwd(), "libcalceph", platforms, sources, script, products)
+# Dependencies that must be installed before this package can be built
+dependencies = []
 
-if !isempty(get(ENV,"TRAVIS_TAG",""))
-    print_buildjl(pwd(), products, hashes,
-        "https://github.com/JuliaAstro/CALCEPHBuilder/releases/download/$(ENV["TRAVIS_TAG"])")
-end
+# Build the tarballs, and possibly a `build.jl` as well.
+build_tarballs(ARGS, "libcalceph", sources, script, platforms, products, dependencies)

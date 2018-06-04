@@ -20,35 +20,15 @@ make -j${nproc}
 make install
 """
 
-# These are the platforms we will build for by default, unless further
-# platforms are passed in on the command line
-platforms = [
-    # Windows
-    Windows(:i686),
-    Windows(:x86_64),
+# Build on all default platforms
+platforms = supported_platforms()
 
-    # Hello linux my old friend
-    Linux(:i686, :glibc),
-    Linux(:x86_64, :glibc),
-    Linux(:aarch64, :glibc),
-    Linux(:armv7l, :glibc),
-    Linux(:powerpc64le, :glibc),
-
-    # Add some musl love
-    Linux(:i686, :musl),
-    Linux(:x86_64, :musl),
-
-    # The BSD's
-    FreeBSD(:x86_64),
-    MacOS()
-]
+# No dependencies
+dependencies = []
 
 products = prefix -> [
     LibraryProduct(prefix, "libcalceph", :libcalceph)
 ]
-
-# Dependencies that must be installed before this package can be built
-dependencies = []
 
 # Build the tarballs, and possibly a `build.jl` as well.
 build_tarballs(ARGS, "libcalceph", sources, script, platforms, products, dependencies)

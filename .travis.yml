@@ -17,8 +17,8 @@ env:
   - BINARYBUILDER_AUTOMATIC_APPLE=true
 sudo: required
 before_script:
-- julia -e 'Pkg.clone("https://github.com/JuliaPackaging/BinaryProvider.jl")'
-- julia -e 'Pkg.clone("https://github.com/JuliaPackaging/BinaryBuilder.jl"); Pkg.build()'
+- julia -e 'using Pkg; Pkg.clone("https://github.com/JuliaPackaging/BinaryProvider.jl")'
+- julia -e 'using Pkg; Pkg.clone("https://github.com/JuliaPackaging/BinaryBuilder.jl"); Pkg.build()'
 script:
 - julia build_tarballs.jl
 

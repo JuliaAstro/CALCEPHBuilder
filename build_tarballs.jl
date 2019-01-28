@@ -6,7 +6,7 @@ sources = [
     "be0ee7e838cbd60bb4a90834a1deb4e657d2d83f8dfe7f34774dc41a7c1cb1b4",
 ]
 
-￼# Bash recipe for building across all platforms
+# Bash recipe for building across all platforms
 script = raw"""
 cd $WORKSPACE/srcdir
 cd calceph-3.3.0/
@@ -15,28 +15,20 @@ if [[ ${target} == i686-w64* ]] || [[ ${target} == x86_64-w64* ]]; then
     sed -i '/^libcalceph_la_LDFLAGS/ s/$/ -no-undefined/' src/Makefile.am
 fi
 autoreconf -fi
-./configure --prefix=/ --host=$target --enable-fortran=no --enable-python=no --disable-static
-make
+./configure --prefix=$prefix --host=$target --enable-fortran=no --enable-python=no --disable-static
+make -j${nproc}
 make install
-
 """
 
-# We attempt to build for all defined platforms
-platforms = [
-    BinaryProvider.Linux(:i686, :glibc),
-    BinaryProvider.Linux(:x86_64, :glibc),
-    BinaryProvider.Linux(:aarch64, :glibc),
-    BinaryProvider.Linux(:armv7l, :glibc),
-    BinaryProvider.Linux(:powerpc64le, :glibc),
-    BinaryProvider.MacOS(),
-    BinaryProvider.Windows(:i686),
-    BinaryProvider.Windows(:x86_64)
+# Build on all default platforms
+platforms = supported_platforms()
+
+# No dependencies
+dependencies = []
+
+products = prefix -> [
+    LibraryProduct(prefix, "libcalceph", :libcalceph)
 ]
 
-products(prefix) = [
-    LibraryProduct(prefix,"libcalceph",:libcalceph)
-]
-
-dependencies = [￼]
-
+# Build the tarballs, and possibly a `build.jl` as well.
 build_tarballs(ARGS, "libcalceph", sources, script, platforms, products, dependencies)

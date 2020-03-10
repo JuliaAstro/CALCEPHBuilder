@@ -9,7 +9,7 @@ sources = [
 # Bash recipe for building across all platforms
 script = raw"""
 cd $WORKSPACE/srcdir
-cd calceph-3.3.0/
+cd calceph-3.4.2/
 if [[ ${target} == i686-w64* ]] || [[ ${target} == x86_64-w64* ]]; then
     echo 'LT_INIT([win32-dll])' >> configure.ac
     sed -i '/^libcalceph_la_LDFLAGS/ s/$/ -no-undefined/' src/Makefile.am
@@ -31,4 +31,4 @@ products = prefix -> [
 ]
 
 # Build the tarballs, and possibly a `build.jl` as well.
-build_tarballs(ARGS, "libcalceph", v"3.3.0", sources, script, platforms, products, dependencies)
+build_tarballs(ARGS, "libcalceph", v"3.4.2", sources, script, platforms, products, dependencies)

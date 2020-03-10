@@ -2,8 +2,8 @@ using BinaryBuilder
 
 # Collection of sources required to build libcalceph
 sources = [
-    "https://www.imcce.fr/content/medias/recherche/equipes/asd/calceph/calceph-3.3.0.tar.gz" =>
-    "be0ee7e838cbd60bb4a90834a1deb4e657d2d83f8dfe7f34774dc41a7c1cb1b4",
+    "https://www.imcce.fr/content/medias/recherche/equipes/asd/calceph/calceph-3.4.2.tar.gz" =>
+    "4bb95979ed77f431c6845b11b7bc49819836e47a8b9ceceff18309683f580c5b",
 ]
 
 # Bash recipe for building across all platforms
